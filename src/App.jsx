@@ -6,22 +6,37 @@ import "@tensorflow/tfjs-backend-webgl";
 import "./App.css";
 import Webcam from "react-webcam";
 import { drawCanvas } from "./utils/draw.jsx";
+import ProgressBar from "./components/progressBar.jsx";
+import Timer from "./components/Timer.jsx";
+import StatCard from "./components/StatCard.jsx";
+import Slider from "@mui/material/Slider";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
+  const [slouchTally, setSlouchTally] = useState(0);
   const [sensitivity, setSensitivity] = useState(5);
-  const MAX_CALIBRATION_COUNT = 10;
+  const [firstDrawn, setFirstDrawn] = useState(false);
+  const MAX_CALIBRATION_COUNT = 3;
   const [angles, setAngles] = useState([]);
+  const [percentChanges, setPercentChanges] = useState([]);
+  const [runningTime, setRunningTime] = useState(0);
+  const [showMore, setShowMore] = useState(false);
+  const [isSlouching, setIsSlouching] = useState(false);
 
   // calculate angle average, rather than store in another state var
   const average_angle =
     angles.length > 0 ? angles.reduce((a, b) => a + b, 0) / angles.length : 0;
   console.log(average_angle);
 
+  const averagePercentChange =
+    percentChanges.length > 0
+      ? percentChanges.reduce((a, b) => a + b, 0) / percentChanges.length
+      : 0;
+
   // STATE VARS
   const [detectorState, setDetectorState] = useState(null);
 
-  // is either loading, waiting, calibrating, calibrated
+  // is either loading, waiting, firstDrawn, calibrating, calibrated
   const [mode, setMode] = useState("loading");
 
   const webcamRef = useRef(null);
@@ -64,7 +79,7 @@ function App() {
         clearInterval(timerRef.current);
       };
     }
-  }, [detectorState, mode, angles]); // Dependency on stateDetector
+  }, [detectorState, mode, angles, slouchTally, totalSlouches]); // Dependency on stateDetector
 
   function calculateAngle(neck, shoulderLeft, shoulderRight) {
     // Calculate the angle using trigonometry
@@ -106,8 +121,6 @@ function App() {
       if (pose.length > 0) {
         const keypoints = pose[0].keypoints;
 
-        drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, "green");
-
         // insert logic for slouch detection here
         const angle = calculateAngle(keypoints[0], keypoints[5], keypoints[6]);
 
@@ -116,18 +129,49 @@ function App() {
           setAngles([...angles, angle]);
         }
 
+        let color = "";
+
+        if (mode === "waiting" || mode === "calibrating") {
+          color = "white";
+        } else {
+          color = "green";
+        }
+
         if (mode === "calibrated") {
           const percentChange = calculatePercentChange(angle, average_angle);
+          // add to percentChange array
+          setPercentChanges([...percentChanges, percentChange]);
           console.log("percent change is", percentChange);
+          // slouch
+          if (percentChange > 10 - sensitivity) {
+            color = "red";
+            drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+            setIsSlouching(true);
+            setSlouchTally((prevCount) => prevCount + 1);
+            console.log("slouchTally", slouchTally);
+            if (slouchTally == 5) {
+              setTotalSlouches((prevCount) => prevCount + 1);
+              alert("Hey! You are slouching!");
+              setSlouchTally(0);
+            }
+          } else {
+            // not slouching
+            setIsSlouching(false);
+            drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+            setAngles([...angles, angle]);
+          }
+        } else {
+          drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+          if (!firstDrawn) {
+            setFirstDrawn(true);
+          }
         }
       }
     }
   };
 
   function renderControlPanel() {
-    if (mode === "calibrated") {
-      // add dashboard and sensitivity meter
-    } else if (mode === "waiting") {
+    if (mode == "waiting") {
       return (
         <button
           className="start-button"
@@ -139,8 +183,49 @@ function App() {
           Calibrate
         </button>
       );
-    } else {
-      // add in loading bar
+    }
+    if (mode == "calibrated") {
+      let avgAngle = `${average_angle.toFixed(1)}°`;
+      let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
+      let hoursPassed = runningTime[1] > 0 ? runningTime : 1;
+      let slouchPerHour = `${totalSlouches / hoursPassed}`;
+      return (
+        <>
+          <StatCard stat={totalSlouches} title={"Total Slouches"} />
+          <Timer
+            onChange={(timeDiff) => {
+              setRunningTime(timeDiff);
+              console.log(timeDiff);
+            }}
+          />
+
+          {showMore && (
+            <>
+              <StatCard stat={avgAngle} title={"Average Angle"} />
+              <StatCard
+                title={"Average Percent Deviation"}
+                stat={avgPercentChange}
+              />
+              <StatCard title={"Slouches per Hour"} stat={slouchPerHour} />
+            </>
+          )}
+          <Slider
+            aria-label="Sensitivity"
+            defaultValue={5}
+            valueLabelDisplay="auto"
+            step={1}
+            marks
+            min={1}
+            max={10}
+            onChange={(v) => {
+              setSensitivity(v);
+            }}
+          />
+          <p className="showmore" onClick={() => setShowMore(!showMore)}>
+            {showMore ? "Show Less" : "Show More"}
+          </p>
+        </>
+      );
     }
   }
 
@@ -148,7 +233,7 @@ function App() {
     setTimeout(() => {
       setMode("waiting");
       console.log("set to waiting");
-    }, 1500);
+    }, 1000);
   }
 
   function renderMessage() {
@@ -158,8 +243,13 @@ function App() {
         message = "Welcome to Sit Up. Give us one moment...";
         break;
       case "waiting":
-        message =
-          'Click "Calibrate" to begin teaching us your typical posture...';
+        if (firstDrawn) {
+          message =
+            'Click "Calibrate" to begin teaching us your typical posture...';
+        } else {
+          message = "Analyzing your current posture...";
+        }
+
         break;
       case "calibrating":
         message = "Just give us a few moments...";
@@ -186,14 +276,24 @@ function App() {
           <p>{renderMessage()}</p>
         </div>
       </div>
+      {mode === "calibrating" && (
+        <ProgressBar width={angles.length / MAX_CALIBRATION_COUNT} />
+      )}
       {mode === "loading" && <h2>Loading...</h2>}
-      {renderControlPanel()}
-      <div className="midsection">
-        <div className="video-container">
+      <div
+        className={`midsection ${
+          mode === "calibrating" || !firstDrawn ? "center" : ""
+        }`}
+      >
+        <div
+          className={`video-container ${isSlouching ? "red" : ""} ${
+            mode === "calibrating" ? "calibrating" : ""
+          }`}
+        >
           <Webcam
             videoConstraints={videoConstraints}
             ref={webcamRef}
-            className="webcam"
+            className={`webcam`}
             onUserMedia={handleWebcamLoad}
           />
           {mode !== "loading" && (
@@ -205,8 +305,12 @@ function App() {
             />
           )}
         </div>
-        <div className="dashboard">
-          <p>Dashboard</p>
+        <div
+          className={`${mode === "waiting" ? "center" : ""} dashboard ${
+            mode === "calibrating" || !firstDrawn ? "calibrating hide" : ""
+          } `}
+        >
+          {renderControlPanel()}
         </div>
       </div>
       <div className="footer">

@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+.hide {
+  display: none !important;
+}
+
 body {
   height: 100%;
   width: 100%;
@@ -14,10 +18,16 @@ body {
 
 .start-button {
   width: 100%;
-  background-color: #5b5b66;
-  color: white;
+  background-color: rgb(253, 79, 79);
+  color: #213547;
 }
 
+.start-button:hover {
+  color: #213547;
+  background-color: rgb(253, 79, 79);
+  border: 1px solid white;
+  color: white;
+}
 .card {
   padding: 2em;
 }
@@ -36,17 +46,16 @@ body {
 
 .footer {
   width: 100%;
-  background: rgb(253, 79, 79);
+  background: #f0ead6;
   height: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 0px;
 }
 
 .header {
-  background: rgb(253, 79, 79);
+  background: #f0ead6;
   width: 100%;
   padding: 0px;
   margin: 0px;
@@ -54,6 +63,7 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  border-bottom: 5px solid #213547;
 }
 
 .header__inner {
@@ -61,6 +71,12 @@ body {
   flex-direction: row;
   justify-content: flex-start;
   align-items: baseline;
+}
+
+.showmore {
+  text-align: start;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .header h1,
@@ -77,22 +93,48 @@ h2 {
 .video-container {
   width: 70%;
   display: flex;
-  border-color: aquamarine;
   justify-content: center;
-  border: 1px solid blue;
+  align-items: center;
   contain: content;
   float: left;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
+
 .midsection {
   display: flex;
-  border: 2px solid green;
+  background-color: #213547;
 }
 
 .dashboard {
+  color: white;
   display: flex;
-  background-color: yellow;
+  background-color: #213547;
   float: right;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  flex-direction: column;
+  padding: 0rem 1rem;
+  margin: 0rem 1rem;
+}
+
+.calibrating {
+  border-top: 5px solid #213547;
+}
+
+.card {
+  border: 2px solid rgb(253, 79, 79);
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.center {
+  justify-content: center;
+  transition: justify-content 0.5s ease-in-out;
 }

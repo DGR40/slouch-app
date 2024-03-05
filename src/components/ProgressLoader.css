@@ -1,0 +1,21 @@
+.progress-loader {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.progress-circle {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-bar {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.1s;
+}
+
+.progress-text {
+  font-size: 24px;
+  fill: #000;
+}

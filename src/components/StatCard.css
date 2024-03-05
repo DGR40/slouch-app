@@ -1,0 +1,11 @@
+.statcard__stat {
+  margin: 0;
+  padding: 0;
+  width: fit-content;
+  border-bottom: 2px solid rgb(253, 79, 79);
+}
+
+.statcard__label {
+  float: left;
+  margin-top: 0px;
+}

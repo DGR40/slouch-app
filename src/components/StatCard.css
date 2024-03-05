@@ -7,5 +7,11 @@
 
 .statcard__label {
   float: left;
-  margin-top: 0px;
+  margin: 0px;
+}
+
+.statcard__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
 }

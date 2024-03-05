@@ -19,14 +19,13 @@ body {
 .start-button {
   width: 100%;
   background-color: rgb(253, 79, 79);
-  color: #213547;
+  color: white;
 }
 
 .start-button:hover {
   color: #213547;
   background-color: rgb(253, 79, 79);
   border: 1px solid white;
-  color: white;
 }
 .card {
   padding: 2em;
@@ -38,6 +37,8 @@ body {
 
 .webcam {
   position: absolute;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .canvas {
@@ -63,7 +64,6 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border-bottom: 5px solid #213547;
 }
 
 .header__inner {
@@ -76,7 +76,12 @@ body {
 .showmore {
   text-align: start;
   text-decoration: underline;
+  text-decoration-color: rgb(253, 79, 79);
   cursor: pointer;
+}
+
+.showmore:hover {
+  color: rgb(253, 79, 79);
 }
 
 .header h1,
@@ -94,17 +99,17 @@ h2 {
   width: 70%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   contain: content;
   float: left;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .midsection {
   display: flex;
   background-color: #213547;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  height: 83vh;
 }
 
 .dashboard {
@@ -116,8 +121,9 @@ h2 {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  padding: 0rem 1rem;
-  margin: 0rem 1rem;
+  padding: 0rem 2rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .calibrating {
@@ -132,9 +138,33 @@ h2 {
   display: flex;
   flex-direction: column;
   width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .center {
   justify-content: center;
   transition: justify-content 0.5s ease-in-out;
+}
+
+@media screen and (max-width: 1200px) {
+  .midsection {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+  .video-container {
+    justify-content: center;
+  }
+  .start-button {
+    height: 80px;
+    margin: 1rem;
+  }
+  .dashboard {
+    overflow-y: hidden;
+    height: auto;
+  }
+  .dashboard .card {
+    width: 60%;
+  }
 }

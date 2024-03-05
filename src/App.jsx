@@ -9,7 +9,8 @@ import { drawCanvas } from "./utils/draw.jsx";
 import ProgressBar from "./components/progressBar.jsx";
 import Timer from "./components/Timer.jsx";
 import StatCard from "./components/StatCard.jsx";
-import Slider from "@mui/material/Slider";
+import CustomSlider from "./components/CustomSlider.jsx";
+import { LinearProgress } from "@mui/material";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
@@ -131,11 +132,7 @@ function App() {
 
         let color = "";
 
-        if (mode === "waiting" || mode === "calibrating") {
-          color = "white";
-        } else {
-          color = "green";
-        }
+        color = "white";
 
         if (mode === "calibrated") {
           const percentChange = calculatePercentChange(angle, average_angle);
@@ -173,15 +170,17 @@ function App() {
   function renderControlPanel() {
     if (mode == "waiting") {
       return (
-        <button
-          className="start-button"
-          onClick={() => {
-            setMode("calibrating");
-            console.log("switched to calibrating mode");
-          }}
-        >
-          Calibrate
-        </button>
+        <>
+          <button
+            className="start-button"
+            onClick={() => {
+              setMode("calibrating");
+              console.log("switched to calibrating mode");
+            }}
+          >
+            Calibrate
+          </button>
+        </>
       );
     }
     if (mode == "calibrated") {
@@ -191,36 +190,40 @@ function App() {
       let slouchPerHour = `${totalSlouches / hoursPassed}`;
       return (
         <>
-          <StatCard stat={totalSlouches} title={"Total Slouches"} />
           <Timer
             onChange={(timeDiff) => {
               setRunningTime(timeDiff);
               console.log(timeDiff);
             }}
           />
+          <StatCard stat={totalSlouches} title={"Total Slouches"} />
+          <CustomSlider
+            sensitivity={sensitivity}
+            onChange={(v) => {
+              console.log(`sensitivity: ${sensitivity}`),
+                setSensitivity(v.target.value);
+            }}
+          />
 
           {showMore && (
             <>
-              <StatCard stat={avgAngle} title={"Average Angle"} />
+              <StatCard
+                stat={avgAngle}
+                title={"Average Angle"}
+                info={
+                  "Average angle between your left shoulder, nose, and right shoulder"
+                }
+              />
+
               <StatCard
                 title={"Average Percent Deviation"}
                 stat={avgPercentChange}
+                info={"Average percent deviation from your average angle"}
               />
               <StatCard title={"Slouches per Hour"} stat={slouchPerHour} />
             </>
           )}
-          <Slider
-            aria-label="Sensitivity"
-            defaultValue={5}
-            valueLabelDisplay="auto"
-            step={1}
-            marks
-            min={1}
-            max={10}
-            onChange={(v) => {
-              setSensitivity(v);
-            }}
-          />
+
           <p className="showmore" onClick={() => setShowMore(!showMore)}>
             {showMore ? "Show Less" : "Show More"}
           </p>
@@ -277,7 +280,17 @@ function App() {
         </div>
       </div>
       {mode === "calibrating" && (
-        <ProgressBar width={angles.length / MAX_CALIBRATION_COUNT} />
+        <LinearProgress
+          value={(angles.length / MAX_CALIBRATION_COUNT) * 100}
+          variant="determinate"
+          sx={{
+            height: 20, // Set the height to 20px
+            bgcolor: "shade(rgb(253, 79, 79), 10%)",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "rgb(253, 79, 79)", // Set the loading bar color to red
+            },
+          }}
+        />
       )}
       {mode === "loading" && <h2>Loading...</h2>}
       <div

@@ -12,8 +12,25 @@ function StatCardCircular({ stat, title, info }) {
         <h3 className="statcard__label">{title}</h3>
         {info && <InfoTooltip title="More Info" content={info}></InfoTooltip>}
       </div>
-      <div>
-        <CircularProgress variant="determinate" value={stat} />
+      <Box
+        sx={{
+          position: "relative",
+          display: "inline-flex",
+          justifyContent: "center",
+          alignContent: "center",
+          color: "white",
+        }}
+      >
+        <CircularProgress
+          variant="determinate"
+          value={stat}
+          size={"5rem"}
+          sx={{
+            "& .MuiCircularProgress-circle": {
+              stroke: "rgb(253, 79, 79)",
+            },
+          }}
+        />
         <Box
           sx={{
             top: 0,
@@ -29,10 +46,11 @@ function StatCardCircular({ stat, title, info }) {
           <Typography
             variant="caption"
             component="div"
-            color="text.secondary"
+            color="white"
+            fontSize={"1rem"}
           >{`${Math.round(stat)}%`}</Typography>
         </Box>
-      </div>
+      </Box>
     </Card>
   );
 }

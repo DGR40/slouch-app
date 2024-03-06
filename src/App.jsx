@@ -222,9 +222,9 @@ function App() {
               console.log(timeDiff);
             }}
           />
-          <StatCard
+          <StatCardCircular
             title={"Slouch Time"}
-            stat={`${slouchPercentage.toFixed(1)}%`}
+            stat={slouchPercentage}
             info={"Percentage of session time slouched"}
           />
           <CustomSlider

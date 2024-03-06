@@ -23,7 +23,6 @@ body {
 }
 
 .start-button:hover {
-  color: #213547;
   background-color: rgb(253, 79, 79);
   border: 1px solid white;
 }
@@ -48,7 +47,7 @@ body {
 .footer {
   width: 100%;
   background: #f0ead6;
-  height: 3rem;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,7 +57,7 @@ body {
 .header {
   background: #f0ead6;
   width: 100%;
-  padding: 0px;
+  padding: 2rem;
   margin: 0px;
   display: flex;
   flex-direction: row;
@@ -68,9 +67,12 @@ body {
 
 .header__inner {
   display: flex;
-  flex-direction: row;
   justify-content: flex-start;
   align-items: baseline;
+  flex-direction: column;
+  width: 80%;
+  margin-left: 20%;
+  margin-right: 20%;
 }
 
 .showmore {
@@ -78,21 +80,24 @@ body {
   text-decoration: underline;
   text-decoration-color: rgb(253, 79, 79);
   cursor: pointer;
+  margin-top: 0;
 }
 
 .showmore:hover {
   color: rgb(253, 79, 79);
 }
 
-.header h1,
-h2 {
+.header h1 {
   margin: 0px;
-  padding: 2rem;
+  padding: 0rem;
+  font-size: 4rem;
   text-align: center;
 }
-.header h2 {
-  margin: 0px;
-  padding: 2rem;
+.header p {
+  margin-left: 1rem;
+  padding: 0rem;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
 .video-container {
@@ -102,6 +107,9 @@ h2 {
   align-items: flex-start;
   contain: content;
   float: left;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box;
 }
 
 .midsection {
@@ -109,7 +117,7 @@ h2 {
   background-color: #213547;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  height: 83vh;
+  height: 75vh;
 }
 
 .dashboard {
@@ -142,9 +150,20 @@ h2 {
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
+.hr-spacer {
+  height: 1px;
+  width: 100%;
+  margin: 1rem;
+  background-color: white;
+}
+
 .center {
   justify-content: center;
   transition: justify-content 0.5s ease-in-out;
+}
+
+.red {
+  border: 20px solid rgb(253, 79, 79);
 }
 
 @media screen and (max-width: 1200px) {
@@ -165,6 +184,13 @@ h2 {
     height: auto;
   }
   .dashboard .card {
-    width: 60%;
+    width: 66%;
   }
+  .header p {
+    font-size: 1.2rem;
+  }
+}
+.slider__label {
+  flex-direction: row;
+  justify-content: center;
 }

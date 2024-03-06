@@ -1,6 +1,7 @@
 import { Slider } from "@mui/material";
 import Card from "./Card.jsx";
 import { useState } from "react";
+import InfoTooltip from "./InfoTooltip.jsx";
 
 function CustomSlider({ sensitivity, onChange }) {
   const marks = [
@@ -11,7 +12,14 @@ function CustomSlider({ sensitivity, onChange }) {
   return (
     <Card>
       <>
-        <h3 className="statcard__label">Sensitivity: {sensitivity}</h3>
+        <div className="statcard__header">
+          <h3 className="statcard__label">Sensitivity</h3>
+          <InfoTooltip
+            title="More Info"
+            content={"Adjusts Amount of angle deviation the model allows"}
+          ></InfoTooltip>
+        </div>
+
         <Slider
           aria-label="Sensitivity"
           defaultValue={5}

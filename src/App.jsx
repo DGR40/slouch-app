@@ -9,12 +9,16 @@ import { drawCanvas } from "./utils/draw.jsx";
 import ProgressBar from "./components/progressBar.jsx";
 import Timer from "./components/Timer.jsx";
 import StatCard from "./components/StatCard.jsx";
+import StatCardCircular from "./components/StatCardCircular.jsx";
 import CustomSlider from "./components/CustomSlider.jsx";
 import { LinearProgress } from "@mui/material";
+import useSound from "use-sound";
+import Bell from "./assets/mixkit-bell-notification-933.wav";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
   const [slouchTally, setSlouchTally] = useState(0);
+  const [slouchRunningCount, setSlouchRunningCount] = useState(0);
   const [sensitivity, setSensitivity] = useState(5);
   const [firstDrawn, setFirstDrawn] = useState(false);
   const MAX_CALIBRATION_COUNT = 3;
@@ -23,6 +27,9 @@ function App() {
   const [runningTime, setRunningTime] = useState(0);
   const [showMore, setShowMore] = useState(false);
   const [isSlouching, setIsSlouching] = useState(false);
+
+  // bring in sound effect
+  const [playSound] = useSound(Bell);
 
   // calculate angle average, rather than store in another state var
   const average_angle =
@@ -33,6 +40,8 @@ function App() {
     percentChanges.length > 0
       ? percentChanges.reduce((a, b) => a + b, 0) / percentChanges.length
       : 0;
+
+  const calibrationProgress = angles.length / MAX_CALIBRATION_COUNT;
 
   // STATE VARS
   const [detectorState, setDetectorState] = useState(null);
@@ -80,7 +89,14 @@ function App() {
         clearInterval(timerRef.current);
       };
     }
-  }, [detectorState, mode, angles, slouchTally, totalSlouches]); // Dependency on stateDetector
+  }, [
+    detectorState,
+    mode,
+    angles,
+    slouchTally,
+    totalSlouches,
+    slouchRunningCount,
+  ]); // Dependency on stateDetector
 
   function calculateAngle(neck, shoulderLeft, shoulderRight) {
     // Calculate the angle using trigonometry
@@ -130,9 +146,7 @@ function App() {
           setAngles([...angles, angle]);
         }
 
-        let color = "";
-
-        color = "white";
+        let color = "white";
 
         if (mode === "calibrated") {
           const percentChange = calculatePercentChange(angle, average_angle);
@@ -141,24 +155,30 @@ function App() {
           console.log("percent change is", percentChange);
           // slouch
           if (percentChange > 10 - sensitivity) {
-            color = "red";
-            drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+            color = "rgb(253, 79, 79)";
+            //drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
             setIsSlouching(true);
+
+            // counts partial slouches, 5 partials = 1 full slouch. gets reset after 5 (inc totalSlouch)
             setSlouchTally((prevCount) => prevCount + 1);
+
+            // also counts partial slouches, but does not get reset
+            setSlouchRunningCount((prevCount) => prevCount + 1);
+
             console.log("slouchTally", slouchTally);
             if (slouchTally == 5) {
+              playSound();
               setTotalSlouches((prevCount) => prevCount + 1);
-              alert("Hey! You are slouching!");
               setSlouchTally(0);
             }
           } else {
             // not slouching
             setIsSlouching(false);
-            drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+            //drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
             setAngles([...angles, angle]);
           }
         } else {
-          drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+          //drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
           if (!firstDrawn) {
             setFirstDrawn(true);
           }
@@ -186,8 +206,14 @@ function App() {
     if (mode == "calibrated") {
       let avgAngle = `${average_angle.toFixed(1)}°`;
       let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
-      let hoursPassed = runningTime[1] > 0 ? runningTime : 1;
-      let slouchPerHour = `${totalSlouches / hoursPassed}`;
+      let minPassed = runningTime[1] === "00" ? 1 : runningTime[1];
+      let slouchPerMin = `${(
+        slouchRunningCount / Math.round(runningTime[3] / 60)
+      ).toFixed(1)}`;
+      let slouchPercentage = runningTime[3]
+        ? (slouchRunningCount / runningTime[3]) * 100
+        : 0.0;
+
       return (
         <>
           <Timer
@@ -196,7 +222,11 @@ function App() {
               console.log(timeDiff);
             }}
           />
-          <StatCard stat={totalSlouches} title={"Total Slouches"} />
+          <StatCard
+            title={"Slouch Time"}
+            stat={`${slouchPercentage.toFixed(1)}%`}
+            info={"Percentage of session time slouched"}
+          />
           <CustomSlider
             sensitivity={sensitivity}
             onChange={(v) => {
@@ -204,6 +234,8 @@ function App() {
                 setSensitivity(v.target.value);
             }}
           />
+
+          <div className="hr-spacer"></div>
 
           {showMore && (
             <>
@@ -220,7 +252,11 @@ function App() {
                 stat={avgPercentChange}
                 info={"Average percent deviation from your average angle"}
               />
-              <StatCard title={"Slouches per Hour"} stat={slouchPerHour} />
+              <StatCard
+                title={"Slouch Rate"}
+                stat={`${slouchPerMin} spm`}
+                info={"Number of slouches per minute"}
+              />
             </>
           )}
 
@@ -243,23 +279,47 @@ function App() {
     let message;
     switch (mode) {
       case "loading":
-        message = "Welcome to Sit Up. Give us one moment...";
+        message = "Welcome to Sit Up. We are just preparing a few things...";
         break;
       case "waiting":
         if (firstDrawn) {
-          message =
-            'Click "Calibrate" to begin teaching us your typical posture...';
+          message = [
+            "Click ",
+            <strong key={1}>Calibrate</strong>,
+            " below and sit with",
+            <a
+              key={1}
+              href="https://medlineplus.gov/guidetogoodposture.html"
+              target="_blank"
+            >
+              {" "}
+              good posture.
+            </a>,
+            <br key={2} />,
+            "Make sure you are in ",
+            <strong key={3}>good lighting</strong>,
+            " with ",
+            <strong key={4}>shoulders-and-up</strong>,
+            " visible...",
+          ];
         } else {
-          message = "Analyzing your current posture...";
+          message = "Loading in the model...";
         }
 
         break;
       case "calibrating":
-        message = "Just give us a few moments...";
+        if (calibrationProgress < 0.5) {
+          message = "This will only take one minute...";
+        } else if (calibrationProgress < 0.75) {
+          message = "Sit up as best you can...";
+        } else {
+          message = "Just give us a few moments...";
+        }
+
         break;
       case "calibrated":
         message =
-          "All set! Resume normal work and we will ping you if your posture needs correcting!";
+          "All set! Resume your work. We will ping you if your posture needs correcting!";
         break;
     }
     return message;
@@ -268,7 +328,7 @@ function App() {
   const videoConstraints = {
     width: { min: window.height / 1.5 },
     height: { min: 720 },
-    aspectRatio: 0.6666666667,
+    aspectRatio: 2,
   };
 
   return (
@@ -281,7 +341,7 @@ function App() {
       </div>
       {mode === "calibrating" && (
         <LinearProgress
-          value={(angles.length / MAX_CALIBRATION_COUNT) * 100}
+          value={calibrationProgress * 100}
           variant="determinate"
           sx={{
             height: 20, // Set the height to 20px
@@ -292,7 +352,6 @@ function App() {
           }}
         />
       )}
-      {mode === "loading" && <h2>Loading...</h2>}
       <div
         className={`midsection ${
           mode === "calibrating" || !firstDrawn ? "center" : ""
@@ -327,7 +386,10 @@ function App() {
         </div>
       </div>
       <div className="footer">
-        <p>Created by Danny Rusk using React and Tensorflow's Movenet model</p>
+        <p className="footer__text">
+          Created by Danny Rusk using React and Tensorflow's Movenet model ©
+          2024
+        </p>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ export function drawTriangle(keypoints, canvasRef, color) {
   // Set stroke color
   ctx.strokeStyle = color;
   // Set line width
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 3;
 
   // Draw the triangle
   ctx.stroke();

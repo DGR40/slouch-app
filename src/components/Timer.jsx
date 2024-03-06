@@ -24,7 +24,7 @@ function Timer({ onChange }) {
     let seconds = elapsedTime % 60;
     seconds = String(seconds).length > 1 ? seconds : `0${String(seconds)}`;
 
-    return [hours, minutes, seconds];
+    return [hours, minutes, seconds, elapsedTime];
   };
 
   const [hour, minutes, seconds] = calculateElapsedTime();

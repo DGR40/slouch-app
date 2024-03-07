@@ -2,29 +2,61 @@
   margin: 0px;
   width: 100%;
   height: 100%;
+  background-color: #fffdf8;
+}
+
+.dashboard {
+  color: #213547;
+  display: flex;
+  float: right;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding: 0rem 2rem;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.dashboard-widescreen {
+  width: 40%;
+}
+
+.dashboard-showmore {
+  overflow-y: scroll;
+  background-color: red;
+}
+
+.dashboard-waiting {
+  width: 100%;
 }
 
 .hide {
   display: none !important;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 body {
-  height: 100%;
-  width: 100%;
   justify-content: flex-start;
   display: flex;
   flex-direction: column;
 }
 
 .start-button {
-  width: 100%;
   background-color: rgb(253, 79, 79);
   color: white;
+  height: 80px;
+  margin: 1rem;
+  width: 100%;
 }
 
 .start-button:hover {
   background-color: rgb(253, 79, 79);
-  border: 1px solid white;
 }
 .card {
   padding: 2em;
@@ -36,8 +68,6 @@ body {
 
 .webcam {
   position: absolute;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
-    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .canvas {
@@ -46,19 +76,16 @@ body {
 
 .footer {
   width: 100%;
-  background: #f0ead6;
-  padding: 1rem;
+  padding: 1rem 0rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
 }
 
 .header {
-  background: #f0ead6;
   width: 100%;
-  padding: 2rem;
   margin: 0px;
+  padding: 2rem 0rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -67,12 +94,28 @@ body {
 
 .header__inner {
   display: flex;
-  justify-content: flex-start;
-  align-items: baseline;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   width: 80%;
   margin-left: 20%;
   margin-right: 20%;
+}
+
+.banner {
+  border-top: 2px solid rgb(253, 79, 79);
+  color: #213547;
+  display: flex;
+  justify-content: center;
+  width: 60%;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.banner__inner {
+  justify-content: center;
+  display: flex;
+  font-size: 1.2rem;
 }
 
 .showmore {
@@ -80,7 +123,8 @@ body {
   text-decoration: underline;
   text-decoration-color: rgb(253, 79, 79);
   cursor: pointer;
-  margin-top: 0;
+  margin-top: 1rem;
+  font-weight: 1000;
 }
 
 .showmore:hover {
@@ -101,7 +145,8 @@ body {
 }
 
 .video-container {
-  width: 70%;
+  width: 100%;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -114,63 +159,56 @@ body {
 
 .midsection {
   display: flex;
-  background-color: #213547;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
-    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   height: 75vh;
-}
-
-.dashboard {
-  color: white;
-  display: flex;
-  background-color: #213547;
-  float: right;
-  width: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  padding: 0rem 2rem;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-.calibrating {
-  border-top: 5px solid #213547;
+  color: #213547;
 }
 
 .card {
-  border: 2px solid rgb(253, 79, 79);
   padding: 1rem;
   margin-top: 1rem;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   width: 100%;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
-    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-}
-
-.hr-spacer {
-  height: 1px;
-  width: 100%;
-  margin: 1rem;
-  background-color: white;
+  background-color: #cbc9c4;
 }
 
 .center {
   justify-content: center;
-  transition: justify-content 0.5s ease-in-out;
 }
 
 .red {
   border: 20px solid rgb(253, 79, 79);
+  border-radius: 12px;
+}
+
+.waiting {
+  height: auto;
+  flex-direction: column-reverse;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}
+
+.midsection-wide-screen {
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  flex-direction: row;
+  display: flex;
+  height: auto;
+}
+
+.video-container-wide-screen {
+  width: 60%;
 }
 
 @media screen and (max-width: 1200px) {
   .midsection {
-    flex-direction: column;
     align-items: center;
     height: auto;
+    flex-direction: column;
   }
   .video-container {
     justify-content: center;
@@ -182,6 +220,8 @@ body {
   .dashboard {
     overflow-y: hidden;
     height: auto;
+    width: 100%;
+    margin-top: 1rem;
   }
   .dashboard .card {
     width: 66%;
@@ -189,8 +229,18 @@ body {
   .header p {
     font-size: 1.2rem;
   }
+  .reverse {
+    flex-direction: column-reverse;
+  }
+  .start-button {
+    width: 70%;
+  }
 }
 .slider__label {
   flex-direction: row;
   justify-content: center;
+}
+.header__subtext {
+  font-size: 2rem;
+  font-weight: 500;
 }

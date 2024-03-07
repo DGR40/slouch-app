@@ -11,10 +11,11 @@ function InfoTooltip({ title, content }) {
       style={{ marginTop: 0 }}
       placement={"top"}
       sx={{
-        fontSize: "20px", // Set the font size to 20 pixels
+        fontSize: "20px",
+        color: "black", // Set the font size to 20 pixels
       }}
     >
-      <IconButton style={{ color: "white" }}>
+      <IconButton style={{ color: "#213547" }}>
         <InfoIcon
           sx={{
             fontSize: "20px", // Set the font size to 20 pixels

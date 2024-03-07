@@ -47,12 +47,13 @@ function CustomSlider({ sensitivity, onChange }) {
               backgroundColor: "rgb(253, 79, 79)",
               // Change the selected track color
               height: "10px",
+              border: "1px solid #213547;",
             },
             "& .MuiSlider-root": {
               height: "10px", // Adjust the height as needed
             },
             "& .MuiSlider-markLabel": {
-              color: "white",
+              color: "#213547",
             },
           }}
         />

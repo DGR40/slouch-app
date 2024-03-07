@@ -14,6 +14,7 @@ import CustomSlider from "./components/CustomSlider.jsx";
 import { LinearProgress } from "@mui/material";
 import useSound from "use-sound";
 import Bell from "./assets/mixkit-bell-notification-933.wav";
+import PostureGrade from "./components/PostureGrade.jsx";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
@@ -156,7 +157,7 @@ function App() {
           // slouch
           if (percentChange > 10 - sensitivity) {
             color = "rgb(253, 79, 79)";
-            //drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+            drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
             setIsSlouching(true);
 
             // counts partial slouches, 5 partials = 1 full slouch. gets reset after 5 (inc totalSlouch)
@@ -174,11 +175,11 @@ function App() {
           } else {
             // not slouching
             setIsSlouching(false);
-            //drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+            drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
             setAngles([...angles, angle]);
           }
         } else {
-          //drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
+          drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
           if (!firstDrawn) {
             setFirstDrawn(true);
           }
@@ -207,25 +208,21 @@ function App() {
       let avgAngle = `${average_angle.toFixed(1)}°`;
       let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
       let minPassed = runningTime[1] === "00" ? 1 : runningTime[1];
-      let slouchPerMin = `${(
-        slouchRunningCount / Math.round(runningTime[3] / 60)
-      ).toFixed(1)}`;
+      let slouchPerMin = runningTime[3]
+        ? slouchRunningCount / Math.round(runningTime[3] / 60)
+        : 0.0;
       let slouchPercentage = runningTime[3]
         ? (slouchRunningCount / runningTime[3]) * 100
         : 0.0;
 
       return (
         <>
+          <PostureGrade slouchPercent={slouchPercentage} />
           <Timer
             onChange={(timeDiff) => {
               setRunningTime(timeDiff);
               console.log(timeDiff);
             }}
-          />
-          <StatCardCircular
-            title={"Slouch Time"}
-            stat={slouchPercentage}
-            info={"Percentage of session time slouched"}
           />
           <CustomSlider
             sensitivity={sensitivity}
@@ -234,8 +231,6 @@ function App() {
                 setSensitivity(v.target.value);
             }}
           />
-
-          <div className="hr-spacer"></div>
 
           {showMore && (
             <>
@@ -254,7 +249,7 @@ function App() {
               />
               <StatCard
                 title={"Slouch Rate"}
-                stat={`${slouchPerMin} spm`}
+                stat={`${slouchPerMin.toFixed(1)} spm`}
                 info={"Number of slouches per minute"}
               />
             </>
@@ -288,7 +283,7 @@ function App() {
             <strong key={1}>Calibrate</strong>,
             " below and sit with",
             <a
-              key={1}
+              key={10}
               href="https://medlineplus.gov/guidetogoodposture.html"
               target="_blank"
             >
@@ -298,8 +293,8 @@ function App() {
             <br key={2} />,
             "Make sure you are in ",
             <strong key={3}>good lighting</strong>,
-            " with ",
-            <strong key={4}>shoulders-and-up</strong>,
+            " with your ",
+            <strong key={4}>shoulders</strong>,
             " visible...",
           ];
         } else {
@@ -335,7 +330,14 @@ function App() {
     <div className="container">
       <div className="header">
         <div className="header__inner">
-          <h1>Sit Up</h1>
+          <h1>
+            Sit Up{" "}
+            <span className="header__subtext">Real-time Posture Analyzer</span>
+          </h1>
+        </div>
+      </div>
+      <div className="banner">
+        <div className="banner__inner">
           <p>{renderMessage()}</p>
         </div>
       </div>
@@ -352,15 +354,17 @@ function App() {
           }}
         />
       )}
+
       <div
-        className={`midsection ${
-          mode === "calibrating" || !firstDrawn ? "center" : ""
-        }`}
+        className={`midsection 
+        ${mode === "calibrating" || !firstDrawn ? "center waiting" : ""} 
+        ${mode === "waiting" ? "waiting" : ""} 
+        ${mode === "calibrated" ? "midsection-wide-screen" : ""}`}
       >
         <div
           className={`video-container ${isSlouching ? "red" : ""} ${
             mode === "calibrating" ? "calibrating" : ""
-          }`}
+          }${mode === "calibrated" ? "video-container-wide-screen" : ""}`}
         >
           <Webcam
             videoConstraints={videoConstraints}
@@ -378,9 +382,12 @@ function App() {
           )}
         </div>
         <div
-          className={`${mode === "waiting" ? "center" : ""} dashboard ${
-            mode === "calibrating" || !firstDrawn ? "calibrating hide" : ""
-          } `}
+          className={`dashboard 
+          ${mode === "waiting" ? "center dashbboard-waiting" : ""} 
+          ${mode === "calibrating" || !firstDrawn ? "hide" : ""} 
+          ${mode === "calibrated" && showMore ? "dashboard-showmore" : ""} 
+          ${mode === "calibrated" ? "dashboard-widescreen" : ""} 
+          `}
         >
           {renderControlPanel()}
         </div>

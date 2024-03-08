@@ -40,14 +40,14 @@ function CustomSlider({ sensitivity, onChange }) {
               },
             },
             "& .MuiSlider-rail": {
-              backgroundColor: "#ccc", // Change the track color
+              backgroundColor: "#213547", // Change the track color
               height: "10px",
             },
             "& .MuiSlider-track": {
               backgroundColor: "rgb(253, 79, 79)",
               // Change the selected track color
               height: "10px",
-              border: "1px solid #213547;",
+              border: "1px solid rgb(253, 79, 79);",
             },
             "& .MuiSlider-root": {
               height: "10px", // Adjust the height as needed

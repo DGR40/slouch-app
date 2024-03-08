@@ -6,15 +6,17 @@ import "@tensorflow/tfjs-backend-webgl";
 import "./App.css";
 import Webcam from "react-webcam";
 import { drawCanvas } from "./utils/draw.jsx";
-import ProgressBar from "./components/progressBar.jsx";
+import ProgressBar from "./components/CustomProgressBar.jsx";
 import Timer from "./components/Timer.jsx";
 import StatCard from "./components/StatCard.jsx";
 import StatCardCircular from "./components/StatCardCircular.jsx";
 import CustomSlider from "./components/CustomSlider.jsx";
-import { LinearProgress } from "@mui/material";
 import useSound from "use-sound";
 import Bell from "./assets/mixkit-bell-notification-933.wav";
 import PostureGrade from "./components/PostureGrade.jsx";
+import StartButton from "./components/StartButton.jsx";
+import CustomProgressBar from "./components/CustomProgressBar.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
@@ -22,7 +24,7 @@ function App() {
   const [slouchRunningCount, setSlouchRunningCount] = useState(0);
   const [sensitivity, setSensitivity] = useState(5);
   const [firstDrawn, setFirstDrawn] = useState(false);
-  const MAX_CALIBRATION_COUNT = 3;
+  const MAX_CALIBRATION_COUNT = 30;
   const [angles, setAngles] = useState([]);
   const [percentChanges, setPercentChanges] = useState([]);
   const [runningTime, setRunningTime] = useState(0);
@@ -188,80 +190,7 @@ function App() {
     }
   };
 
-  function renderControlPanel() {
-    if (mode == "waiting") {
-      return (
-        <>
-          <button
-            className="start-button"
-            onClick={() => {
-              setMode("calibrating");
-              console.log("switched to calibrating mode");
-            }}
-          >
-            Calibrate
-          </button>
-        </>
-      );
-    }
-    if (mode == "calibrated") {
-      let avgAngle = `${average_angle.toFixed(1)}°`;
-      let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
-      let minPassed = runningTime[1] === "00" ? 1 : runningTime[1];
-      let slouchPerMin = runningTime[3]
-        ? slouchRunningCount / Math.round(runningTime[3] / 60)
-        : 0.0;
-      let slouchPercentage = runningTime[3]
-        ? (slouchRunningCount / runningTime[3]) * 100
-        : 0.0;
-
-      return (
-        <>
-          <PostureGrade slouchPercent={slouchPercentage} />
-          <Timer
-            onChange={(timeDiff) => {
-              setRunningTime(timeDiff);
-              console.log(timeDiff);
-            }}
-          />
-          <CustomSlider
-            sensitivity={sensitivity}
-            onChange={(v) => {
-              console.log(`sensitivity: ${sensitivity}`),
-                setSensitivity(v.target.value);
-            }}
-          />
-
-          {showMore && (
-            <>
-              <StatCard
-                stat={avgAngle}
-                title={"Average Angle"}
-                info={
-                  "Average angle between your left shoulder, nose, and right shoulder"
-                }
-              />
-
-              <StatCard
-                title={"Average Percent Deviation"}
-                stat={avgPercentChange}
-                info={"Average percent deviation from your average angle"}
-              />
-              <StatCard
-                title={"Slouch Rate"}
-                stat={`${slouchPerMin.toFixed(1)} spm`}
-                info={"Number of slouches per minute"}
-              />
-            </>
-          )}
-
-          <p className="showmore" onClick={() => setShowMore(!showMore)}>
-            {showMore ? "Show Less" : "Show More"}
-          </p>
-        </>
-      );
-    }
-  }
+  function renderDashboard() {}
 
   function handleWebcamLoad() {
     setTimeout(() => {
@@ -341,17 +270,18 @@ function App() {
           <p>{renderMessage()}</p>
         </div>
       </div>
-      {mode === "calibrating" && (
-        <LinearProgress
-          value={calibrationProgress * 100}
-          variant="determinate"
-          sx={{
-            height: 20, // Set the height to 20px
-            bgcolor: "shade(rgb(253, 79, 79), 10%)",
-            "& .MuiLinearProgress-bar": {
-              backgroundColor: "rgb(253, 79, 79)", // Set the loading bar color to red
-            },
+      {mode === "waiting" && (
+        <StartButton
+          onChange={() => {
+            setMode("calibrating");
+            console.log("set to calibrating");
           }}
+        />
+      )}
+
+      {mode === "calibrating" && (
+        <CustomProgressBar
+          width={(angles.length / MAX_CALIBRATION_COUNT) * 100}
         />
       )}
 
@@ -389,7 +319,7 @@ function App() {
           ${mode === "calibrated" ? "dashboard-widescreen" : ""} 
           `}
         >
-          {renderControlPanel()}
+          {renderDashboard()}
         </div>
       </div>
       <div className="footer">

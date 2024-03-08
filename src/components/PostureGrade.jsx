@@ -37,7 +37,9 @@ function PostureGrade({ slouchPercent }) {
         <h2 className="grade__text">Posture Grade </h2>
         <InfoTooltip
           title="More Info"
-          content={"Based on percentage of time sloucing"}
+          content={`${(100 - slouchPercent).toFixed(
+            1
+          )}% of the time you have good posture`}
         ></InfoTooltip>
       </div>
 
@@ -59,6 +61,16 @@ function PostureGrade({ slouchPercent }) {
           sx={{
             "& .MuiCircularProgress-circle": {
               stroke: color,
+              fill: "#213547",
+              strokeWidth: "4px",
+            },
+            "& MuiCircularProgress-circleDeterminate": {
+              color: "black",
+              fill: "blue",
+              margin: "2px",
+            },
+            ".css-1idz92c-MuiCircularProgress-svg": {
+              margin: "-10px",
             },
           }}
         />
@@ -77,7 +89,7 @@ function PostureGrade({ slouchPercent }) {
           <Typography
             variant="caption"
             component="div"
-            color="#213547"
+            color="white"
             fontSize={"3rem"}
             fontWeight={"1000"}
           >

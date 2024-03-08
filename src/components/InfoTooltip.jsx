@@ -9,7 +9,7 @@ function InfoTooltip({ title, content }) {
       title={content}
       arrow
       style={{ marginTop: 0 }}
-      placement={"top"}
+      placement={"right"}
       sx={{
         fontSize: "20px",
         color: "black", // Set the font size to 20 pixels

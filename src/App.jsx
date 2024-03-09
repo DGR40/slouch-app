@@ -24,7 +24,7 @@ function App() {
   const [slouchRunningCount, setSlouchRunningCount] = useState(0);
   const [sensitivity, setSensitivity] = useState(5);
   const [firstDrawn, setFirstDrawn] = useState(false);
-  const MAX_CALIBRATION_COUNT = 30;
+  const MAX_CALIBRATION_COUNT = 3;
   const [angles, setAngles] = useState([]);
   const [percentChanges, setPercentChanges] = useState([]);
   const [runningTime, setRunningTime] = useState(0);
@@ -190,8 +190,6 @@ function App() {
     }
   };
 
-  function renderDashboard() {}
-
   function handleWebcamLoad() {
     setTimeout(() => {
       setMode("waiting");
@@ -255,6 +253,21 @@ function App() {
     aspectRatio: 2,
   };
 
+  // props for dashboard
+  const dashboardProps = {
+    average_angle,
+    averagePercentChange,
+    slouchRunningCount,
+    firstDrawn,
+    runningTime,
+    setRunningTime,
+    showMore,
+    setShowMore,
+    sensitivity,
+    setSensitivity,
+    mode,
+  };
+
   return (
     <div className="container">
       <div className="header">
@@ -311,16 +324,8 @@ function App() {
             />
           )}
         </div>
-        <div
-          className={`dashboard 
-          ${mode === "waiting" ? "center dashbboard-waiting" : ""} 
-          ${mode === "calibrating" || !firstDrawn ? "hide" : ""} 
-          ${mode === "calibrated" && showMore ? "dashboard-showmore" : ""} 
-          ${mode === "calibrated" ? "dashboard-widescreen" : ""} 
-          `}
-        >
-          {renderDashboard()}
-        </div>
+        {console.log("test", dashboardProps.average_angle)}
+        {mode === "calibrated" && <Dashboard {...dashboardProps} />}
       </div>
       <div className="footer">
         <p className="footer__text">

@@ -1,33 +1,44 @@
+import PostureGrade from "./PostureGrade.jsx";
+import Timer from "./Timer.jsx";
+import ProgressBar from "./CustomProgressBar.jsx";
+import StatCard from "./StatCard.jsx";
+import StatCardCircular from "./StatCardCircular.jsx";
+import CustomSlider from "./CustomSlider.jsx";
+
 export default function Dashboard({
   average_angle,
   averagePercentChange,
-  runningTime,
   slouchRunningCount,
+  firstDrawn,
+  runningTime,
+  setRunningTime,
+  showMore,
+  setShowMore,
   sensitivity,
+  setSensitivity,
+  mode,
 }) {
+  console.log("average_angle", averagePercentChange);
   let avgAngle = `${average_angle.toFixed(1)}°`;
   let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
   let minPassed = runningTime[1] === "00" ? 1 : runningTime[1];
-  let slouchPerMin = props.runningTime[3]
-    ? props.slouchRunningCount / Math.round(props.runningTime[3] / 60)
+  let slouchPerMin = runningTime[3]
+    ? slouchRunningCount / Math.round(runningTime[3] / 60)
     : 0.0;
-  let slouchPercentage = props.runningTime[3]
-    ? (props.slouchRunningCount / props.runningTime[3]) * 100
+  let slouchPercentage = runningTime[3]
+    ? (slouchRunningCount / runningTime[3]) * 100
     : 0.0;
 
   return (
     <div
-      className={`dashboard 
-          ${mode === "waiting" ? "center dashbboard-waiting" : ""} 
-          ${mode === "calibrating" || !firstDrawn ? "hide" : ""} 
+      className={`dashboard dashboard-widescreen
           ${mode === "calibrated" && showMore ? "dashboard-showmore" : ""} 
-          ${mode === "calibrated" ? "dashboard-widescreen" : ""} 
           `}
     >
       <PostureGrade slouchPercent={slouchPercentage} />
       <Timer
         onChange={(timeDiff) => {
-          props.setRunningTime(timeDiff);
+          setRunningTime(timeDiff);
           console.log(timeDiff);
         }}
       />
@@ -35,11 +46,11 @@ export default function Dashboard({
         sensitivity={sensitivity}
         onChange={(v) => {
           console.log(`sensitivity: ${sensitivity}`),
-            props.setSensitivity(v.target.value);
+            setSensitivity(v.target.value);
         }}
       />
 
-      {props.showMore && (
+      {showMore && (
         <>
           <StatCard
             stat={avgAngle}
@@ -62,7 +73,7 @@ export default function Dashboard({
         </>
       )}
 
-      <p className="showmore" onClick={() => props.setShowMore(!showMore)}>
+      <p className="showmore" onClick={() => setShowMore(!showMore)}>
         {showMore ? "Show Less" : "Show More"}
       </p>
     </div>

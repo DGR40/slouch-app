@@ -6,11 +6,6 @@
   overflow-x: hidden;
 }
 
-.dashboard-showmore {
-  overflow-y: scroll;
-  background-color: red;
-}
-
 .dashboard {
   color: #213547;
   display: flex;
@@ -22,6 +17,11 @@
   padding: 0rem 2rem;
   overflow-y: hidden;
   overflow-x: hidden;
+}
+
+.dashboard-showmore {
+  overflow-y: scroll;
+  background-color: red;
 }
 
 .dashboard-widescreen {
@@ -197,7 +197,7 @@ body {
   width: 100vw;
   flex-direction: row;
   display: flex;
-  height: auto;
+  height: 80vh;
 }
 
 .video-container-wide-screen {

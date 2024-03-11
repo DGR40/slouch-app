@@ -44,10 +44,12 @@ export default function CustomProgressBar({ width }) {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "60%",
         height: "20px",
+        margin: "1rem 20%",
         "& .MuiLinearProgress-root": {
           height: "20px",
+          borderRadius: "12px",
         },
       }}
     >

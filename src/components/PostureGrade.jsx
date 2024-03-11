@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import InfoTooltip from "./InfoTooltip";
 
-function PostureGrade({ slouchPercent }) {
+function PostureGrade({ slouchPercent, runningTime }) {
   // returns letter grade based on percent
   function getGradeAndColor(percent) {
     console.log("percent", percent);
@@ -43,60 +43,65 @@ function PostureGrade({ slouchPercent }) {
         ></InfoTooltip>
       </div>
 
-      <Box
-        sx={{
-          position: "relative",
-          display: "inline-flex",
-          justifyContent: "center",
-          alignContent: "center",
-          color: "#213547",
-          border: "1px solid #213547",
-          borderRadius: "50%",
-        }}
-      >
-        <CircularProgress
-          variant="determinate"
-          value={100 - slouchPercent}
-          size={"8rem"}
-          sx={{
-            "& .MuiCircularProgress-circle": {
-              stroke: color,
-              fill: "#213547",
-              strokeWidth: "4px",
-            },
-            "& MuiCircularProgress-circleDeterminate": {
-              color: "black",
-              fill: "blue",
-              margin: "2px",
-            },
-            ".css-1idz92c-MuiCircularProgress-svg": {
-              margin: "-10px",
-            },
-          }}
-        />
-        <Box
-          sx={{
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            position: "absolute",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography
-            variant="caption"
-            component="div"
-            color="white"
-            fontSize={"3rem"}
-            fontWeight={"1000"}
+      {runningTime >= 3 && (
+        <>
+          <Box
+            sx={{
+              position: "relative",
+              display: "inline-flex",
+              justifyContent: "center",
+              alignContent: "center",
+              color: "#213547",
+              border: "1px solid #213547",
+              borderRadius: "50%",
+            }}
           >
-            {grade}
-          </Typography>
-        </Box>
-      </Box>
+            <CircularProgress
+              variant="determinate"
+              value={100 - slouchPercent}
+              size={"8rem"}
+              sx={{
+                "& .MuiCircularProgress-circle": {
+                  stroke: color,
+                  fill: "#213547",
+                  strokeWidth: "4px",
+                },
+                "& MuiCircularProgress-circleDeterminate": {
+                  color: "black",
+                  fill: "blue",
+                  margin: "2px",
+                },
+                ".css-1idz92c-MuiCircularProgress-svg": {
+                  margin: "-10px",
+                },
+              }}
+            />
+            <Box
+              sx={{
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                position: "absolute",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                variant="caption"
+                component="div"
+                color="white"
+                fontSize={"3rem"}
+                fontWeight={"1000"}
+              >
+                {grade}
+              </Typography>
+            </Box>
+          </Box>
+        </>
+      )}
+      {runningTime < 3 && <p>Calculating grade...</p>}
     </div>
   );
 }

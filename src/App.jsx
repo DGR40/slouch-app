@@ -27,7 +27,7 @@ function App() {
   const MAX_CALIBRATION_COUNT = 3;
   const [angles, setAngles] = useState([]);
   const [percentChanges, setPercentChanges] = useState([]);
-  const [runningTime, setRunningTime] = useState(0);
+  const [runningTime, setRunningTime] = useState(1);
   const [showMore, setShowMore] = useState(false);
   const [isSlouching, setIsSlouching] = useState(false);
 
@@ -37,7 +37,6 @@ function App() {
   // calculate angle average, rather than store in another state var
   const average_angle =
     angles.length > 0 ? angles.reduce((a, b) => a + b, 0) / angles.length : 0;
-  console.log(average_angle);
 
   const averagePercentChange =
     percentChanges.length > 0
@@ -99,6 +98,7 @@ function App() {
     slouchTally,
     totalSlouches,
     slouchRunningCount,
+    runningTime,
   ]); // Dependency on stateDetector
 
   function calculateAngle(neck, shoulderLeft, shoulderRight) {
@@ -122,7 +122,7 @@ function App() {
 
   const detect = async (detector) => {
     // check if calibrated
-    if (angles.length >= MAX_CALIBRATION_COUNT) {
+    if (angles.length >= MAX_CALIBRATION_COUNT && mode === "calibrating") {
       setMode("calibrated");
       console.log("calibrated!");
     }
@@ -151,7 +151,9 @@ function App() {
 
         let color = "white";
 
-        if (mode === "calibrated") {
+        // only detect slouch if calibrated and running count is greater than zero
+        // (prevents having more slouches than seconds (i.e. negative slouch percentages))
+        if (mode === "calibrated" && runningTime[3]) {
           const percentChange = calculatePercentChange(angle, average_angle);
           // add to percentChange array
           setPercentChanges([...percentChanges, percentChange]);

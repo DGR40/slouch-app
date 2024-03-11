@@ -25,9 +25,18 @@ export default function Dashboard({
   let slouchPerMin = runningTime[3]
     ? slouchRunningCount / Math.round(runningTime[3] / 60)
     : 0.0;
-  let slouchPercentage = runningTime[3]
-    ? (slouchRunningCount / runningTime[3]) * 100
-    : 0.0;
+  let slouchPercentage =
+    runningTime[3] && runningTime[3] > 0
+      ? (slouchRunningCount / runningTime[3]) * 100
+      : 0.0;
+  console.log(
+    "slouch running count:",
+    slouchRunningCount,
+    " running time",
+    runningTime[3],
+    slouchPercentage,
+    "SLOUCH %"
+  );
 
   return (
     <div
@@ -35,7 +44,11 @@ export default function Dashboard({
           ${mode === "calibrated" && showMore ? "dashboard-showmore" : ""} 
           `}
     >
-      <PostureGrade slouchPercent={slouchPercentage} />
+      <PostureGrade
+        slouchPercent={slouchPercentage}
+        runningTime={runningTime[3]}
+      />
+
       <Timer
         onChange={(timeDiff) => {
           setRunningTime(timeDiff);

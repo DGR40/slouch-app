@@ -250,9 +250,9 @@ function App() {
   }
 
   const videoConstraints = {
-    width: { min: window.height / 1.5 },
+    width: { min: window.width / 2 },
     height: { min: 720 },
-    aspectRatio: 2,
+    aspectRatio: 3,
   };
 
   // props for dashboard
@@ -270,8 +270,10 @@ function App() {
     mode,
   };
 
+  //${isSlouching ? "red" : ""}
+
   return (
-    <div className="container">
+    <div className={`container`}>
       <div className="header">
         <div className="header__inner">
           <h1>
@@ -307,20 +309,26 @@ function App() {
         ${mode === "calibrated" ? "midsection-wide-screen" : ""}`}
       >
         <div
-          className={`video-container ${isSlouching ? "red" : ""} ${
+          className={`video-container  ${
             mode === "calibrating" ? "calibrating" : ""
-          }${mode === "calibrated" ? "video-container-wide-screen" : ""}`}
+          }${mode === "calibrated" ? "video-container-wide-screen" : ""} ${
+            isSlouching ? "red" : ""
+          }`}
         >
           <Webcam
             videoConstraints={videoConstraints}
             ref={webcamRef}
-            className={`webcam`}
+            className={`webcam ${
+              mode === "calibrated" ? "webcam-wide-screen" : ""
+            }`}
             onUserMedia={handleWebcamLoad}
           />
           {mode !== "loading" && (
             <canvas
               ref={canvasRef}
-              className="canvas"
+              className={`canvas ${
+                mode === "calibrated" ? "webcam-wide-screen" : ""
+              }`}
               height={webcamRef.current.video.videoHeight}
               width={webcamRef.current.video.videoWidth}
             />

@@ -30,7 +30,7 @@ function Timer({ onChange }) {
   const [hour, minutes, seconds] = calculateElapsedTime();
 
   return (
-    <Card className="timer">
+    <Card className="timer center">
       <h3 className="timer__label">Time Elapsed</h3>
       <div className="panel__container">
         <div className="panel">

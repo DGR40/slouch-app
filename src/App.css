@@ -9,8 +9,6 @@
 .dashboard {
   color: #213547;
   display: flex;
-  float: right;
-  width: 100%;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
@@ -21,11 +19,10 @@
 
 .dashboard-showmore {
   overflow-y: scroll;
-  background-color: red;
 }
 
 .dashboard-widescreen {
-  width: 40%;
+  width: 34.5%;
 }
 
 .dashboard-waiting {
@@ -40,6 +37,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  align-items: center;
 }
 
 body {
@@ -51,9 +49,8 @@ body {
 .start-button {
   background-color: rgb(253, 79, 79);
   color: white;
-  height: 80px;
-  margin: 1rem 0;
-  width: 100%;
+  margin: 1rem 20%;
+  width: 60%;
 }
 
 .start-button:hover {
@@ -61,6 +58,10 @@ body {
 }
 .card {
   padding: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .read-the-docs {
@@ -107,8 +108,8 @@ body {
   display: flex;
   justify-content: center;
   width: 60%;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .banner__inner {
@@ -155,6 +156,7 @@ body {
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box; /* Firefox, other Gecko */
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .midsection {
@@ -192,16 +194,15 @@ body {
 }
 
 .midsection-wide-screen {
-  padding: 0px;
   margin: 0px;
   width: 100vw;
   flex-direction: row;
   display: flex;
-  height: 80vh;
+  justify-content: space-evenly;
 }
 
 .video-container-wide-screen {
-  width: 60vw;
+  width: 55vw;
 }
 
 @media screen and (max-width: 1200px) {
@@ -213,9 +214,8 @@ body {
   .video-container {
     justify-content: center;
   }
-  .start-button {
-    height: 80px;
-    margin: 1rem;
+  .video-container-wide-screen {
+    width: 69vw;
   }
   .dashboard {
     overflow-y: hidden;
@@ -232,7 +232,7 @@ body {
   .reverse {
     flex-direction: column-reverse;
   }
-  .start-button {
+  .banner {
     width: 70%;
   }
 }

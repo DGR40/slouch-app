@@ -18,7 +18,6 @@ export default function Dashboard({
   setSensitivity,
   mode,
 }) {
-  console.log("average_angle", averagePercentChange);
   let avgAngle = `${average_angle.toFixed(1)}°`;
   let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
   let minPassed = runningTime[1] === "00" ? 1 : runningTime[1];

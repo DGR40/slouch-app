@@ -7,7 +7,6 @@ import InfoTooltip from "./InfoTooltip";
 function PostureGrade({ slouchPercent, runningTime }) {
   // returns letter grade based on percent
   function getGradeAndColor(percent) {
-    console.log("percent", percent);
     let grade = "";
     let color = "";
     if (percent >= 85) {
@@ -54,12 +53,13 @@ function PostureGrade({ slouchPercent, runningTime }) {
               color: "#213547",
               border: "1px solid #213547",
               borderRadius: "50%",
+              marginBottom: "0.5rem",
             }}
           >
             <CircularProgress
               variant="determinate"
               value={100 - slouchPercent}
-              size={"8rem"}
+              size={"7rem"}
               sx={{
                 "& .MuiCircularProgress-circle": {
                   stroke: color,

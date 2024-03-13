@@ -251,7 +251,7 @@ function App() {
 
   const videoConstraints = {
     width: { min: window.width / 2 },
-    height: { min: 720 },
+    height: { min: 700 },
     aspectRatio: 3,
   };
 

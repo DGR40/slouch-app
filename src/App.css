@@ -15,6 +15,7 @@
   padding: 0rem 2rem;
   overflow-y: hidden;
   overflow-x: hidden;
+  height: 100%;
 }
 
 .dashboard-showmore {
@@ -87,7 +88,7 @@ body {
 .header {
   width: 100%;
   margin: 0px;
-  padding: 2rem 0rem;
+  padding: 1rem 0rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -161,7 +162,7 @@ body {
 
 .midsection {
   display: flex;
-  height: 75vh;
+  height: 80vh;
   color: #213547;
 }
 
@@ -205,6 +206,21 @@ body {
   width: 55vw;
 }
 
+.slider__label {
+  flex-direction: row;
+  justify-content: center;
+}
+.header__subtext {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 1000px) {
+  .header__subtext {
+    font-size: 1.2rem;
+  }
+}
+
 @media screen and (max-width: 1200px) {
   .midsection {
     align-items: center;
@@ -232,15 +248,7 @@ body {
   .reverse {
     flex-direction: column-reverse;
   }
-  .banner {
-    width: 70%;
-  }
 }
-.slider__label {
-  flex-direction: row;
-  justify-content: center;
-}
-.header__subtext {
-  font-size: 2rem;
-  font-weight: 500;
+
+@media screen and (max-width: 1200px) {
 }

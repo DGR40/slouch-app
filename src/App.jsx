@@ -26,7 +26,7 @@ function App() {
   const [slouchRunningCount, setSlouchRunningCount] = useState(0);
   const [sensitivity, setSensitivity] = useState(5);
   const [firstDrawn, setFirstDrawn] = useState(false);
-  const MAX_CALIBRATION_COUNT = 3;
+  const MAX_CALIBRATION_COUNT = 15;
   const [angles, setAngles] = useState([]);
   const [percentChanges, setPercentChanges] = useState([]);
   const [runningTime, setRunningTime] = useState(1);
@@ -239,9 +239,9 @@ function App() {
 
         break;
       case "calibrating":
-        if (calibrationProgress < 0.5) {
-          message = "This will only take one minute...";
-        } else if (calibrationProgress < 0.75) {
+        if (calibrationProgress < 0.33) {
+          message = "This will take less than a minute...";
+        } else if (calibrationProgress < 0.67) {
           message = "Sit up as best you can...";
         } else {
           message = "Just give us a few moments...";

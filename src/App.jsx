@@ -118,7 +118,7 @@ function App() {
   }
 
   function calculatePercentChange(angle, average) {
-    let pChange = Math.round(((angle - average) / average) * 100, 3);
+    let pChange = ((angle - average) / average) * 100;
     if (pChange > 0) {
       return pChange;
     }
@@ -162,8 +162,9 @@ function App() {
           // add to percentChange array
           setPercentChanges([...percentChanges, percentChange]);
           console.log("percent change is", percentChange);
-          // slouch
-          if (percentChange > 10 - sensitivity) {
+
+          // determine is slouch
+          if (percentChange > (10 - sensitivity) * 3 + 5) {
             color = "rgb(253, 79, 79)";
             drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
             setIsSlouching(true);
@@ -180,7 +181,7 @@ function App() {
               setSlouchTally(0);
             }
           } else {
-            // not slouching
+            // not slouched 5 times in a row
             setIsSlouching(false);
             drawCanvas(keypoints, canvasRef, videoWidth, videoHeight, color);
             setAngles([...angles, angle]);

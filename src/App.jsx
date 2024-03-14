@@ -54,6 +54,13 @@ function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const timerRef = useRef(null);
+  const videoContainerRef = useRef(null);
+
+  const videoConstraintsRef = useRef({
+    width: { min: window.innerWidth * 0.6 },
+    height: { min: window.innerHeight * 0.4 },
+    aspectRatio: 16 / 9,
+  });
 
   const initializeTensorFlow = async () => {
     try {
@@ -249,11 +256,26 @@ function App() {
     return message;
   }
 
-  const videoConstraints = {
-    width: { min: window.width / 2 },
-    height: { min: 700 },
-    aspectRatio: 3,
-  };
+  useEffect(() => {
+    function resizeWindow() {
+      if (videoContainerRef.current) {
+        webcamRef.current.video.height = videoContainerRef.current.offsetHeight;
+        canvasRef.current.height = videoContainerRef.current.offsetWidth;
+      }
+      window.addEventListener("resize", resizeWindow);
+      resizeWindow();
+      return () => {
+        window.removeEventListener("resize", resizeWindow);
+      };
+    }
+  }, []);
+
+  if (mode === "calibrated") {
+    console.log("HEIGHT", webcamRef.current);
+
+    //webcamRef.current.video.width = videoContainerRef.current.offsetHeight;
+    //canvasRef.current.width = videoContainerRef.current.offsetWidth;
+  }
 
   // props for dashboard
   const dashboardProps = {
@@ -314,9 +336,10 @@ function App() {
           }${mode === "calibrated" ? "video-container-wide-screen" : ""} ${
             isSlouching ? "red" : ""
           }`}
+          ref={videoContainerRef}
         >
           <Webcam
-            videoConstraints={videoConstraints}
+            videoConstraints={videoConstraintsRef.current}
             ref={webcamRef}
             className={`webcam ${
               mode === "calibrated" ? "webcam-wide-screen" : ""

@@ -20,10 +20,10 @@ export default function Dashboard({
 }) {
   let avgAngle = `${average_angle.toFixed(1)}°`;
   let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
-  let minPassed = runningTime[1] === "00" ? 1 : runningTime[1];
-  let slouchPerMin = runningTime[3]
-    ? slouchRunningCount / Math.round(runningTime[3] / 60)
-    : 0.0;
+  let slouchPerMin =
+    runningTime[3] > 0
+      ? slouchRunningCount / Math.round(runningTime[3] / 60)
+      : 0.0;
   let slouchPercentage =
     runningTime[3] && runningTime[3] > 0
       ? (slouchRunningCount / runningTime[3]) * 100

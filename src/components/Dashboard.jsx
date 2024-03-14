@@ -1,15 +1,12 @@
 import PostureGrade from "./PostureGrade.jsx";
 import Timer from "./Timer.jsx";
-import ProgressBar from "./CustomProgressBar.jsx";
 import StatCard from "./StatCard.jsx";
-import StatCardCircular from "./StatCardCircular.jsx";
 import CustomSlider from "./CustomSlider.jsx";
 
 export default function Dashboard({
   average_angle,
   averagePercentChange,
   slouchRunningCount,
-  firstDrawn,
   runningTime,
   setRunningTime,
   showMore,
@@ -18,12 +15,20 @@ export default function Dashboard({
   setSensitivity,
   mode,
 }) {
+  function getSlouchPerMin() {
+    if (runningTime[1] == 0) {
+      return slouchRunningCount;
+    } else {
+      return slouchRunningCount / runningTime[1];
+    }
+  }
+
   let avgAngle = `${average_angle.toFixed(1)}°`;
   let avgPercentChange = `${averagePercentChange.toFixed(1)}%`;
-  let slouchPerMin =
-    runningTime[3] > 0
-      ? slouchRunningCount / Math.round(runningTime[3] / 60)
-      : 0.0;
+  let slouchPerMin = getSlouchPerMin();
+  runningTime[3] > 0
+    ? Math.round(slouchRunningCount / runningTime[3] / 60)
+    : "default";
   let slouchPercentage =
     runningTime[3] && runningTime[3] > 0
       ? (slouchRunningCount / runningTime[3]) * 100
@@ -34,7 +39,9 @@ export default function Dashboard({
     " running time",
     runningTime[3],
     slouchPercentage,
-    "SLOUCH %"
+    "SLOUCH %",
+    " SPM: ",
+    slouchPerMin
   );
 
   return (
@@ -51,7 +58,6 @@ export default function Dashboard({
       <Timer
         onChange={(timeDiff) => {
           setRunningTime(timeDiff);
-          console.log(timeDiff);
         }}
       />
       <CustomSlider

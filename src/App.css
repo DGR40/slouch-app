@@ -100,7 +100,7 @@ body {
 }
 
 .header {
-  width: 100%;
+  width: 60%;
   margin: 0px;
   padding: 1rem 0rem;
   display: flex;
@@ -113,8 +113,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: 60vw;
+  flex-direction: row;
+}
+
+.restart-button {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-left: 10px;
 }
 
 .banner {
@@ -122,6 +130,7 @@ body {
   color: #213547;
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 60%;
   margin-left: auto;
   margin-right: auto;

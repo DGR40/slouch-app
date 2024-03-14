@@ -17,6 +17,7 @@ import PostureGrade from "./components/PostureGrade.jsx";
 import StartButton from "./components/StartButton.jsx";
 import CustomProgressBar from "./components/CustomProgressBar.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import RestartButton from "./components/RestartButton.jsx";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
@@ -73,7 +74,6 @@ function App() {
         poseDetection.SupportedModels.MoveNet,
         detectorConfig
       );
-      console.log("successfully loaded model");
       setDetectorState(detector);
     } catch (error) {
       console.error(
@@ -114,12 +114,10 @@ function App() {
       Math.atan2(neck.y - shoulderLeft.y, neck.x - shoulderLeft.x) -
       Math.atan2(neck.y - shoulderRight.y, neck.x - shoulderRight.x);
     const angleDeg = Math.abs(angleRad * (180 / Math.PI));
-    console.log("angle deg", angleDeg);
     return angleDeg;
   }
 
   function calculatePercentChange(angle, average) {
-    console.log("angle", angle, "ag angle", average_angle);
     let pChange = Math.round(((angle - average) / average) * 100, 3);
     if (pChange > 0) {
       return pChange;
@@ -131,7 +129,6 @@ function App() {
     // check if calibrated
     if (angles.length >= MAX_CALIBRATION_COUNT && mode === "calibrating") {
       setMode("calibrated");
-      console.log("calibrated!");
     }
 
     if (
@@ -160,7 +157,7 @@ function App() {
 
         // only detect slouch if calibrated and running count is greater than zero
         // (prevents having more slouches than seconds (i.e. negative slouch percentages))
-        if (mode === "calibrated" && runningTime[3]) {
+        if (mode === "calibrated" && runningTime[3] > 0) {
           const percentChange = calculatePercentChange(angle, average_angle);
           // add to percentChange array
           setPercentChanges([...percentChanges, percentChange]);
@@ -177,7 +174,6 @@ function App() {
             // also counts partial slouches, but does not get reset
             setSlouchRunningCount((prevCount) => prevCount + 1);
 
-            console.log("slouchTally", slouchTally);
             if (slouchTally == 5) {
               playSound();
               setTotalSlouches((prevCount) => prevCount + 1);
@@ -202,7 +198,6 @@ function App() {
   function handleWebcamLoad() {
     setTimeout(() => {
       setMode("waiting");
-      console.log("set to waiting");
     }, 1000);
   }
 
@@ -256,6 +251,7 @@ function App() {
     return message;
   }
 
+  // handles resize of webcam
   useEffect(() => {
     function resizeWindow() {
       if (videoContainerRef.current) {
@@ -269,13 +265,6 @@ function App() {
       };
     }
   }, []);
-
-  if (mode === "calibrated") {
-    console.log("HEIGHT", webcamRef.current);
-
-    //webcamRef.current.video.width = videoContainerRef.current.offsetHeight;
-    //canvasRef.current.width = videoContainerRef.current.offsetWidth;
-  }
 
   // props for dashboard
   const dashboardProps = {
@@ -307,21 +296,24 @@ function App() {
       <div className="banner">
         <div className="banner__inner">
           <p>{renderMessage()}</p>
+          {mode === "calibrated" && <RestartButton />}
         </div>
       </div>
       {mode === "waiting" && (
         <StartButton
           onChange={() => {
             setMode("calibrating");
-            console.log("set to calibrating");
           }}
         />
       )}
 
       {mode === "calibrating" && (
-        <CustomProgressBar
-          width={(angles.length / MAX_CALIBRATION_COUNT) * 100}
-        />
+        <>
+          <RestartButton />
+          <CustomProgressBar
+            width={(angles.length / MAX_CALIBRATION_COUNT) * 100}
+          />
+        </>
       )}
 
       <div
@@ -357,7 +349,6 @@ function App() {
             />
           )}
         </div>
-        {console.log("test", dashboardProps.average_angle)}
         {mode === "calibrated" && <Dashboard {...dashboardProps} />}
       </div>
       <div className="footer">

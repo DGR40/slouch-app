@@ -18,6 +18,7 @@ import StartButton from "./components/StartButton.jsx";
 import CustomProgressBar from "./components/CustomProgressBar.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import RestartButton from "./components/RestartButton.jsx";
+import Announcement from "./components/Announcement.jsx";
 
 function App() {
   const [totalSlouches, setTotalSlouches] = useState(0);
@@ -31,6 +32,9 @@ function App() {
   const [runningTime, setRunningTime] = useState(1);
   const [showMore, setShowMore] = useState(false);
   const [isSlouching, setIsSlouching] = useState(false);
+
+  // FOR BEGINNING ANNOUNCEMENT
+  const [hideAnnouncement, setHideAnnouncement] = useState(false);
 
   // bring in sound effect
   const [playSound] = useSound(Bell);
@@ -285,7 +289,15 @@ function App() {
   //${isSlouching ? "red" : ""}
 
   return (
-    <div className={`container`}>
+    <div className={`container ${hideAnnouncement ? "" : "no_scroll"}`}>
+      <Announcement
+        onChange={() => {
+          console.log("setting announcement");
+          setHideAnnouncement(true);
+        }}
+        text="Welcome to Sit Up! Sit Up requires access to your camera. Don't worry, no images are ever saved. Experience is best on desktop."
+        hideAnnouncement={hideAnnouncement}
+      />
       <div className="header">
         <div className="header__inner">
           <h1>

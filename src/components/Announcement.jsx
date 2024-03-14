@@ -7,7 +7,7 @@ export default function Announcement({ text, onChange, hideAnnouncement }) {
           className="start-button announcement__button"
           onClick={onChange}
         >
-          Sounds good, let's do it!
+          Click here to begin!
         </button>
       </div>
     </div>

@@ -295,7 +295,7 @@ function App() {
           console.log("setting announcement");
           setHideAnnouncement(true);
         }}
-        text="Welcome to Sit Up! Sit Up requires access to your camera. Don't worry, no images are ever saved. Experience is best on desktop."
+        text="Welcome to Sit Up! Sit Up requires access to your camera. Don't worry, no images are ever saved. Experience is best on desktop. Make sure to have your volume on."
         hideAnnouncement={hideAnnouncement}
       />
       <div className="header">

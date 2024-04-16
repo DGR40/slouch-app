@@ -1,8 +1,8 @@
-# React + Vite
+# Slouch Detection App
+## Made with React and Tensorflow.js
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Features
+- User can calibrate model to accommodate their own posture
+- User can adjust sensitivity of slouch detection
+- User can view key slouch metrics of their session
+- User is pinged when they are slouching
